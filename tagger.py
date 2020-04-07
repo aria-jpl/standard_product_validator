@@ -4,6 +4,7 @@
 Tags standard product, and co-located products, as validated/invalid/in-progress
 '''
 
+from builtins import range
 import re
 import json
 import pickle
@@ -126,12 +127,12 @@ def query_es(grq_url, es_query):
     all results are generated, & returns the compiled result
     '''
     # make sure the fields from & size are in the es_query
-    if 'size' in es_query.keys():
+    if 'size' in list(es_query.keys()):
         iterator_size = es_query['size']
     else:
         iterator_size = 1000
         es_query['size'] = iterator_size
-    if 'from' in es_query.keys():
+    if 'from' in list(es_query.keys()):
         from_position = es_query['from']
     else:
         from_position = 0
@@ -164,7 +165,7 @@ def contains(list1, list2):
     '''returns True if list1 contains all products in list2. False otherwise'''
     hashlist1 = build_hashed_dict(list1)
     hashlist2 = build_hashed_dict(list2)
-    for key in hashlist2.keys():
+    for key in list(hashlist2.keys()):
         if hashlist1.get(key, False) is False:
             return False
     return True
@@ -174,7 +175,7 @@ def return_missing(list1, list2):
     missing = []
     hashlist1 = build_hashed_dict(list1)
     hashlist2 = build_hashed_dict(list2)
-    for key in hashlist2.keys():
+    for key in list(hashlist2.keys()):
         obj = hashlist1.get(key)
         if obj is None:
             missing.append(hashlist2[key])
@@ -185,7 +186,7 @@ def return_matching(list1, list2):
     matching = []
     hashlist1 = build_hashed_dict(list1)
     hashlist2 = build_hashed_dict(list2)
-    for key in hashlist1.keys():
+    for key in list(hashlist1.keys()):
         obj = hashlist2.get(key)
         if obj is not None:
             matching.append(obj)
@@ -220,7 +221,7 @@ def get_starttime(input_string):
     try:
         starttime = result.group(0)
         return starttime
-    except Exception, err:
+    except Exception as err:
         raise Exception('input product: {} does not match regex:{}. Cannot compare SLCs to acquisition ids.'.format(input_string, st_regex))
 
 def tag_all(object_list, tag, index, aoi_name):

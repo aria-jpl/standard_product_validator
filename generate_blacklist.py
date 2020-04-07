@@ -7,6 +7,7 @@ Queries ES for ifg config files. Determines if products
 '''
 
 from __future__ import print_function
+from builtins import range
 import re
 import json
 import pickle
@@ -29,7 +30,7 @@ def main():
     acq_lists = build_hashed_dict(get_acq_lists(acq_list_version))
     ifgs = build_hashed_dict(get_ifgs())
     blacklist = build_hashed_dict(get_blacklist())
-    print('Found {} acq-lists, {} ifgs, and {} blacklist products.'.format(len(acq_lists.keys()), len(ifgs.keys()), len(blacklist.keys())))
+    print('Found {} acq-lists, {} ifgs, and {} blacklist products.'.format(len(list(acq_lists.keys())), len(list(ifgs.keys())), len(list(blacklist.keys()))))
     print('Determining missing IFGs...')
     missing = determine_missing_ifgs(acq_lists, ifgs, blacklist)
     print('Found {} missing IFGs. Checking jobs.'.format(len(missing)))
@@ -75,7 +76,7 @@ def determine_missing_ifgs(acq_lists, ifgs, blacklist):
     Determines the ifgs that have not been produced from the acquisition lists.
     '''
     missing = []
-    for key in acq_lists.keys():   
+    for key in list(acq_lists.keys()):   
         print('checking for: {}'.format(key))
         if not key in ifgs and not key in blacklist:
             missing.append(acq_lists[key])
@@ -107,7 +108,7 @@ def get_starttime(input_string):
     try:
         starttime = result.group(0)
         return starttime
-    except Exception, err:
+    except Exception as err:
         raise Exception('input product: {} does not match regex:{}. Cannot compare SLCs to acquisition ids. {}'.format(input_string, st_regex, err))
 
 def get_ifgs():
@@ -139,12 +140,12 @@ def query_es(grq_url, es_query):
     all results are generated, & returns the compiled result
     '''
     # make sure the fields from & size are in the es_query
-    if 'size' in es_query.keys():
+    if 'size' in list(es_query.keys()):
         iterator_size = es_query['size']
     else:
         iterator_size = 1000
         es_query['size'] = iterator_size
-    if 'from' in es_query.keys():
+    if 'from' in list(es_query.keys()):
         from_position = es_query['from']
     else:
         from_position = 0

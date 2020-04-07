@@ -6,6 +6,7 @@ from that job.
 '''
 
 from __future__ import print_function
+from builtins import range
 import json
 import os, sys
 import hashlib
@@ -121,12 +122,12 @@ def query_es(grq_url, es_query):
     all results are generated, & returns the compiled result
     '''
     # make sure the fields from & size are in the es_query
-    if 'size' in es_query.keys():
+    if 'size' in list(es_query.keys()):
         iterator_size = es_query['size']
     else:
         iterator_size = 10
         es_query['size'] = iterator_size
-    if 'from' in es_query.keys():
+    if 'from' in list(es_query.keys()):
         from_position = es_query['from']
     else:
         from_position = 0
