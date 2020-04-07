@@ -1,6 +1,6 @@
 {
     "label": "Standard Product S1-GUNW - Blacklist S1-GUNW from topsapp job",
-    "component":"mozart",
+    "component":"figaro",
     "submission_type": "iteration",
     "params" : [
     {
